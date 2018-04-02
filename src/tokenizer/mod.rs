@@ -16,13 +16,16 @@ pub enum Token {
 }
 
 pub trait Tokenizer {
-  fn tokenize(&self) -> Result<Vec<Token>, &'static str>;
+  fn tokenize(&self) -> Result<Vec<Token>, Vec<String>>;
 }
 
 impl Tokenizer for String {
-  fn tokenize(&self) -> Result<Vec<Token>, &'static str> {
+  fn tokenize(&self) -> Result<Vec<Token>, Vec<String>> {
     let mut it = self.chars().peekable();
     let mut tokens: Vec<Token> = vec![];
+    let mut line = 1;
+    let mut errors: Vec<String> = vec![];
+
     loop {
       match it.peek() {
         Some(&ch) => match ch {
@@ -31,10 +34,10 @@ impl Tokenizer for String {
               .into_iter()
               .collect();
             if it.peek().unwrap().is_alphabetic() {
-              panic!("Syntax error");
+              errors.push(format!("Unexpected character in number on Line {}", line));
+            } else {
+              tokens.push(Token::Integer(num.parse::<i32>().unwrap()));
             }
-
-            tokens.push(Token::Integer(num.parse::<i32>().unwrap()));
           }
           '+' => {
             it.next();
@@ -94,6 +97,7 @@ impl Tokenizer for String {
           '\n' => {
             it.next();
             tokens.push(Token::Operator(Symbol::LB));
+            line = line + 1;
           }
           '\'' => {
             it.next();
@@ -114,13 +118,20 @@ impl Tokenizer for String {
               _ => tokens.push(Token::Variable(chars))
             }
           }
-          _ => panic!("Invalid char!")
+          _ => {
+            let ch = it.next().unwrap();
+            errors.push(format!("Unknown character \"{}\" on Line {}", ch, line))
+          }
         },
         None => break
       }
     }
 
-    Ok(tokens)
+    if errors.len() > 0 {
+      Err(errors)
+    } else {
+      Ok(tokens)
+    }
   }
 }
 

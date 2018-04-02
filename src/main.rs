@@ -12,8 +12,14 @@ fn main() {
   let mut contents = String::new();
   fo.read_to_string(&mut contents).expect("Something went wrong while reading");
 
-  let tokens = contents.tokenize().unwrap();
-  let code: String = tokens.iter().map(|token| match token {
+  let tokens = contents.tokenize();
+  if tokens.is_err() {
+    let errors = tokens.err().unwrap();
+    errors.iter().for_each(|err| println!("ERROR: {}", err));
+    panic!("There were errors during parsing");
+  }
+
+  let code: String = tokens.unwrap().iter().map(|token| match token {
     &Token::Keyword(ref keyword) => ["<span style=\"color: #8e44ad; font-weight: 700\">", &keyword_to_string(&keyword), "</span>"].join(""),
     &Token::Integer(i) => ["<span style=\"color: #e67e22\">", &i.to_string(), "</span>"].join(""),
     &Token::Operator(ref symbol) => match symbol {
