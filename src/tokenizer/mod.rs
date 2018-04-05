@@ -1,10 +1,10 @@
-use std::iter::Peekable;
-use std::str::Chars;
 use tokenizer::keyword::*;
 use tokenizer::symbol::*;
+use tokenizer::utils::*;
 
 pub mod keyword;
 pub mod symbol;
+pub mod utils;
 
 #[derive(Debug, PartialEq)]
 pub enum Token {
@@ -135,18 +135,3 @@ impl Tokenizer for String {
   }
 }
 
-fn consume_while<F>(it: &mut Peekable<Chars>, pred: F) -> Vec<char>
-  where F: Fn(char) -> bool {
-  let mut chars: Vec<char> = vec![];
-
-  while let Some(&ch) = it.peek() {
-    if pred(ch) {
-      it.next().unwrap();
-      chars.push(ch);
-    } else {
-      break;
-    }
-  }
-
-  chars
-}
