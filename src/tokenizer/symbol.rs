@@ -8,11 +8,15 @@ pub enum Symbol {
   RParen,
   LSquareBracket,
   RSquareBracket,
+  LCurlyBracket,
+  RCurlyBracket,
   Space,
   CR,
   LB,
   Arrow,
   Comma,
+  Underscore,
+  Colon
 }
 
 pub fn symbol_to_string(symbol: &Symbol) -> String {
@@ -25,10 +29,14 @@ pub fn symbol_to_string(symbol: &Symbol) -> String {
     &Symbol::RParen => String::from(")"),
     &Symbol::LSquareBracket => String::from("["),
     &Symbol::RSquareBracket => String::from("]"),
+    &Symbol::LCurlyBracket => String::from("{"),
+    &Symbol::RCurlyBracket => String::from("}"),
     &Symbol::Space => String::from(" "),
     &Symbol::CR => String::from("\r"),
     &Symbol::LB => String::from("\n"),
     &Symbol::Arrow => String::from("->"),
     &Symbol::Comma => String::from(","),
+    &Symbol::Underscore => String::from("_"),
+    &Symbol::Colon => String::from(":"),
   }
 }

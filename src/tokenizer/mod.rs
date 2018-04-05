@@ -48,6 +48,8 @@ impl Tokenizer for String {
           ')' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RParen)),
           '[' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LSquareBracket)),
           ']' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RSquareBracket)),
+          '{' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LCurlyBracket)),
+          '}' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RCurlyBracket)),
           '#' => consume_comment(&mut it, &mut tokens),
           ',' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Comma)),
           ' ' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Space)),
@@ -57,7 +59,9 @@ impl Tokenizer for String {
             line = line + 1;
           }
           '\'' => consume_string(&mut it, &mut tokens),
-          'A' ... 'Z' | 'a' ... 'z' | '_' => consume_keyword(&mut it, &mut tokens),
+          'A' ... 'Z' | 'a' ... 'z' => consume_keyword(&mut it, &mut tokens),
+          '_' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Underscore)),
+          ':' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Colon)),
           _ => {
             let ch = it.next().unwrap();
             errors.push(format!("Unknown character \"{}\" on Line {}", ch, line))
