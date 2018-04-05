@@ -1,10 +1,10 @@
 use tokenizer::keyword::*;
 use tokenizer::symbol::*;
-use tokenizer::utils::*;
+use tokenizer::consumers::*;
 
 pub mod keyword;
 pub mod symbol;
-pub mod utils;
+pub mod consumers;
 
 #[derive(Debug, PartialEq)]
 pub enum Token {
@@ -29,16 +29,7 @@ impl Tokenizer for String {
     loop {
       match it.peek() {
         Some(&ch) => match ch {
-          '0' ... '9' => {
-            let num: String = consume_while(&mut it, |a| a.is_numeric())
-              .into_iter()
-              .collect();
-            if it.peek().unwrap().is_alphabetic() {
-              errors.push(format!("Unexpected character in number on Line {}", line));
-            } else {
-              tokens.push(Token::Integer(num.parse::<i32>().unwrap()));
-            }
-          }
+          '0' ... '9' => consume_number(&mut it, &mut tokens, &mut errors, line ),
           '+' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Plus)),
           '-' => {
             it.next();
@@ -71,25 +62,8 @@ impl Tokenizer for String {
             consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LB));
             line = line + 1;
           }
-          '\'' => {
-            it.next();
-            let chars: String = consume_while(&mut it, |a| a != '\'')
-              .into_iter()
-              .collect();
-            it.next();
-
-            tokens.push(Token::String(chars));
-          }
-          'A' ... 'Z' | 'a' ... 'z' | '_' => {
-            let chars: String = consume_while(&mut it, |a| a.is_alphanumeric() || a == '_')
-              .into_iter()
-              .collect();
-
-            match chars.as_ref() {
-              "def" => tokens.push(Token::Keyword(Keyword::Def)),
-              _ => tokens.push(Token::Variable(chars))
-            }
-          }
+          '\'' => consume_string(&mut it, &mut tokens),
+          'A' ... 'Z' | 'a' ... 'z' | '_' => consume_keyword(&mut it, &mut tokens),
           _ => {
             let ch = it.next().unwrap();
             errors.push(format!("Unknown character \"{}\" on Line {}", ch, line))
