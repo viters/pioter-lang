@@ -49,6 +49,7 @@ impl Tokenizer for String {
           '[' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LSquareBracket)),
           ']' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RSquareBracket)),
           '#' => consume_comment(&mut it, &mut tokens),
+          ',' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Comma)),
           ' ' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Space)),
           '\r' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::CR)),
           '\n' => {

@@ -12,6 +12,7 @@ pub enum Symbol {
   CR,
   LB,
   Arrow,
+  Comma,
 }
 
 pub fn symbol_to_string(symbol: &Symbol) -> String {
@@ -28,5 +29,6 @@ pub fn symbol_to_string(symbol: &Symbol) -> String {
     &Symbol::CR => String::from("\r"),
     &Symbol::LB => String::from("\n"),
     &Symbol::Arrow => String::from("->"),
+    &Symbol::Comma => String::from(","),
   }
 }

@@ -58,6 +58,8 @@ pub fn consume_keyword(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
 
   match chars.as_ref() {
     "def" => token_vec.push(Token::Keyword(Keyword::Def)),
+    "true" => token_vec.push(Token::Keyword(Keyword::True)),
+    "false" => token_vec.push(Token::Keyword(Keyword::False)),
     _ => token_vec.push(Token::Variable(chars))
   }
 }
