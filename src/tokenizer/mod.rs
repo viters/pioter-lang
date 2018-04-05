@@ -34,21 +34,11 @@ impl Tokenizer for String {
           '+' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Plus)),
           '-' => {
             it.next();
-
-            match it.peek() {
-              Some(&ch) => match ch {
-                '>' => {
-                  it.next();
-                  tokens.push(Token::Operator(Symbol::Arrow));
-                }
-                _ => {
-                  tokens.push(Token::Operator(Symbol::Minus));
-                }
-              },
-              None => {
-                tokens.push(Token::Operator(Symbol::Minus));
-                break;
-              }
+            if it.peek().unwrap() == &'>' {
+              it.next();
+              tokens.push(Token::Operator(Symbol::Arrow));
+            } else {
+              tokens.push(Token::Operator(Symbol::Minus));
             }
           }
           '*' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Multiply)),

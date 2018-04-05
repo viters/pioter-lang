@@ -1,6 +1,6 @@
 [package]
-name = "pioter"
-version = "0.1.0"
-authors = ["Łukasz Szcześniak <lukasz.szczesniak@summer.agency>"]
+name = "pioter-lang"
+version = "0.2.0"
+authors = ["Łukasz Szcześniak <say.hello@viters.net>", "Łukasz Mielczarek <mielczarek.lukasz96@gmail.com"]
 
 [dependencies]
