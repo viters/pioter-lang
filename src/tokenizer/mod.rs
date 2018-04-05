@@ -1,10 +1,10 @@
-use std::iter::Peekable;
-use std::str::Chars;
 use tokenizer::keyword::*;
 use tokenizer::symbol::*;
+use tokenizer::utils::*;
 
 pub mod keyword;
 pub mod symbol;
+pub mod utils;
 
 #[derive(Debug, PartialEq)]
 pub enum Token {
@@ -39,10 +39,7 @@ impl Tokenizer for String {
               tokens.push(Token::Integer(num.parse::<i32>().unwrap()));
             }
           }
-          '+' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::Plus));
-          }
+          '+' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Plus)),
           '-' => {
             it.next();
 
@@ -62,41 +59,16 @@ impl Tokenizer for String {
               }
             }
           }
-          '*' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::Multiply));
-          }
-          '/' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::Divide));
-          }
-          '(' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::LParen));
-          }
-          ')' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::RParen));
-          }
-          '[' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::LSquareBracket));
-          }
-          ']' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::RSquareBracket));
-          }
-          ' ' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::Space));
-          }
-          '\r' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::CR));
-          }
+          '*' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Multiply)),
+          '/' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Divide)),
+          '(' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LParen)),
+          ')' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RParen)),
+          '[' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LSquareBracket)),
+          ']' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RSquareBracket)),
+          ' ' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Space)),
+          '\r' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::CR)),
           '\n' => {
-            it.next();
-            tokens.push(Token::Operator(Symbol::LB));
+            consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LB));
             line = line + 1;
           }
           '\'' => {
@@ -135,18 +107,3 @@ impl Tokenizer for String {
   }
 }
 
-fn consume_while<F>(it: &mut Peekable<Chars>, pred: F) -> Vec<char>
-  where F: Fn(char) -> bool {
-  let mut chars: Vec<char> = vec![];
-
-  while let Some(&ch) = it.peek() {
-    if pred(ch) {
-      it.next().unwrap();
-      chars.push(ch);
-    } else {
-      break;
-    }
-  }
-
-  chars
-}
