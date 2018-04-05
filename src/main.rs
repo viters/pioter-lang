@@ -38,6 +38,7 @@ fn tokens_to_html(tokens: Vec<Token>) -> String {
   tokens.iter().map(|token| match token {
     &Token::Keyword(ref keyword) => wrap_into_span("#8e44ad", keyword_to_string(&keyword).as_ref()),
     &Token::Integer(i) => wrap_into_span("#e67e22", i.to_string().as_ref()),
+    &Token::Float(f) => wrap_into_span("#e67e22", f.to_string().as_ref()),
     &Token::Operator(ref symbol) => match symbol {
       &Symbol::LB => String::from("<br>"),
       _ => wrap_into_span("#3498db", symbol_to_string(&symbol).as_ref()),

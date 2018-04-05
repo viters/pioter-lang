@@ -8,6 +8,7 @@ pub mod consumers;
 
 #[derive(Debug, PartialEq)]
 pub enum Token {
+  Float(f32),
   Integer(i32),
   Operator(Symbol),
   Keyword(Keyword),

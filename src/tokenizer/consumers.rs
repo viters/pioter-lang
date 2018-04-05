@@ -28,11 +28,30 @@ pub fn consume_number(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>, erro
   let num: String = consume_while(it, |a| a.is_numeric())
     .into_iter()
     .collect();
-  if it.peek().unwrap().is_alphabetic() {
-    errors.push(format!("Unexpected character in number on Line {}", line));
-  } else {
-    token_vec.push(Token::Integer(num.parse::<i32>().unwrap()));
+
+  if it.peek().unwrap() == &'.' {
+    it.next();
+    let decimal: String = consume_while(it, |a| a.is_numeric())
+      .into_iter()
+      .collect();
+
+    let float = [num.as_ref(), ".", decimal.as_ref()].join("");
+
+    if it.peek().unwrap().is_alphabetic() {
+      errors.push(format!("Unexpected character in number on Line {}", line));
+    } else {
+      token_vec.push(Token::Float(float.parse::<f32>().unwrap()));
+    }
   }
+  else{
+    if it.peek().unwrap().is_alphabetic() {
+      errors.push(format!("Unexpected character in number on Line {}", line));
+    } else {
+      token_vec.push(Token::Integer(num.parse::<i32>().unwrap()));
+    }
+  }
+
+
 }
 
 pub fn consume_keyword(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>){
