@@ -45,11 +45,12 @@ fn tokens_to_html(tokens: Vec<Token>) -> String {
     },
     &Token::Variable(ref x) => wrap_into_span("#e74c3c", x),
     &Token::String(ref x) => wrap_into_span("#2ecc71", ["'", x, "'"].join("").as_ref()),
+    &Token::Comment(ref x) => wrap_into_span("#ccc", ["#", x].join("").as_ref()),
   }).collect()
 }
 
 fn wrap_into_span(color: &str, content: &str) -> String {
-  ["<span style=\"color: ", color, "\">", content, "</span>"].join("")
+  ["<span style=\"font-family: 'Fira Code', 'Consolas', monospace; color: ", color, "\">", content, "</span>"].join("")
 }
 
 fn write_to_file(name: &str, contents: String) {

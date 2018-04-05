@@ -14,6 +14,7 @@ pub enum Token {
   Keyword(Keyword),
   Variable(String),
   String(String),
+  Comment(String),
 }
 
 pub trait Tokenizer {
@@ -30,7 +31,7 @@ impl Tokenizer for String {
     loop {
       match it.peek() {
         Some(&ch) => match ch {
-          '0' ... '9' => consume_number(&mut it, &mut tokens, &mut errors, line ),
+          '0' ... '9' => consume_number(&mut it, &mut tokens, &mut errors, line),
           '+' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Plus)),
           '-' => {
             it.next();
@@ -47,6 +48,7 @@ impl Tokenizer for String {
           ')' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RParen)),
           '[' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::LSquareBracket)),
           ']' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::RSquareBracket)),
+          '#' => consume_comment(&mut it, &mut tokens),
           ' ' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::Space)),
           '\r' => consume_token(&mut it, &mut tokens, Token::Operator(Symbol::CR)),
           '\n' => {
