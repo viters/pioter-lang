@@ -2,4 +2,3 @@
 /target/
 **/*.rs.bk
 code.html
-/code.ptr

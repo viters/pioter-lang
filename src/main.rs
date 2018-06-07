@@ -2,21 +2,21 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
+use pest::Parser;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::Write;
-use tokenizer::*;
-use tokenizer::keyword::*;
-use tokenizer::symbol::*;
+use std::collections::HashMap;
 
-mod tokenizer;
+#[derive(Parser)]
+#[grammar = "grammar.pest"]
+struct PioterParser;
 
 fn main() {
-  let contents = read_file("code.ptr");
-  let tokens = tokenize_string(contents);
-  let code = tokens_to_html(tokens.unwrap());
+  let contents = read_file("code2.ptr");
+  tokenize_string(contents);
 
-  write_to_file("code.html", code);
+//  write_to_file("code.html", code);
 }
 
 fn read_file(name: &str) -> String {
@@ -27,37 +27,49 @@ fn read_file(name: &str) -> String {
   contents
 }
 
-fn tokenize_string(contents: String) -> Result<Vec<Token>, Vec<String>> {
-  let tokens = contents.tokenize();
-  if tokens.is_err() {
-    let errors = tokens.err().unwrap();
-    errors.iter().for_each(|err| println!("ERROR: {}", err));
-    panic!("There were errors during parsing");
+fn tokenize_string(contents: String) {
+  let p_starts = PioterParser::parse(Rule::p_start, &contents).unwrap_or_else(|e| panic!("{}", e));
+
+  let mut variables: HashMap<&str, &str> = HashMap::new();
+
+  for p_start in p_starts {
+    for p_def in p_start.into_inner() {
+      match p_def.as_rule() {
+        Rule::p_def => {
+          let mut name = "";
+
+          for p_def_inner in p_def.into_inner() {
+            match p_def_inner.as_rule() {
+              Rule::def => (),
+              Rule::constant => {
+                name = p_def_inner.into_span().as_str();
+              },
+              Rule::p_eip => {
+                for p_eip_inner in p_def_inner.into_inner() {
+                  match p_eip_inner.as_rule() {
+                    Rule::number => variables.insert(name, p_eip_inner.into_span().as_str()),
+                    Rule::string => variables.insert(name, p_eip_inner.into_span().as_str()),
+                    Rule::boolean => variables.insert(name, p_eip_inner.into_span().as_str()),
+                    Rule::constant => variables.insert(name, p_eip_inner.into_span().as_str()),
+                    _ => variables.insert(name, p_eip_inner.into_span().as_str())
+                  }
+                }
+              },
+              _ => unreachable!()
+            }
+          }
+        },
+        _ => unreachable!()
+      }
+    }
   }
 
-  tokens
+  for (key, value) in variables {
+    println!("{} / {}", key, value);
+  }
 }
 
-fn tokens_to_html(tokens: Vec<Token>) -> String {
-  tokens.iter().map(|token| match token {
-    &Token::Keyword(ref keyword) => wrap_into_span("#8e44ad", keyword_to_string(&keyword).as_ref()),
-    &Token::Integer(i) => wrap_into_span("#e67e22", i.to_string().as_ref()),
-    &Token::Float(f) => wrap_into_span("#e67e22", f.to_string().as_ref()),
-    &Token::Operator(ref symbol) => match symbol {
-      &Symbol::LB => String::from("<br />"),
-      &Symbol::Space => String::from("&nbsp;&nbsp;"),
-      _ => wrap_into_span("#3498db", symbol_to_string(&symbol).as_ref()),
-    },
-    &Token::Variable(ref x) => wrap_into_span("#e74c3c", x),
-    &Token::String(ref x) => wrap_into_span("#2ecc71", ["'", x, "'"].join("").as_ref()),
-    &Token::Comment(ref x) => wrap_into_span("#ccc", ["#", x].join("").as_ref()),
-  }).collect()
-}
-
-fn wrap_into_span(color: &str, content: &str) -> String {
-  ["<span style=\"font-family: 'Fira Code', 'Consolas', monospace; color: ", color, "\">", content, "</span>"].join("")
-}
-
+#[allow(dead_code)]
 fn write_to_file(name: &str, contents: String) {
   let mut f = File::create(name).expect("Unable to create file!");
   f.write_all(contents.as_bytes()).expect("Unable to write to file!");

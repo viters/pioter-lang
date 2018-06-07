@@ -1,0 +1,17 @@
+(def x (+ 5 21.37))
+(def inc (+ 1.))
+(def result (inc x)) # some funny stuff
+(def string 'hejka')
+(def subtract_from_1 (_ -> - 1))
+(def obj {a: 5, x: 'as'})
+(def array [1, 2, true, false])
+# (def dec (x -> - 1 x))
+
+# calculate newton symbol #
+(def factorial (match
+  (0 -> 1)
+  ({a} -> a)
+  (x -> * (factorial (- x 1)) x)))
+(def newton (n, k -> / (factorial n) (factorial (- n k))))
+
+(def output (newton 5 3))
