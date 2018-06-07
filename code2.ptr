@@ -1,2 +1,7 @@
-(def x (5))
+(def x ((5)))
 (def y 7)
+(def a x)
+(def b 'xD')
+(def fls false)
+(def f1 1.)
+(def f2 2.15123)

@@ -13,15 +13,16 @@ colon = _{ ":" }
 line = _{ "|" }
 
 def = _{ ^"def" }
-k_match = @{ ^"match" }
+k_match = _{ ^"match" }
 k_true = @{ ^"true" }
 k_false = @{ ^"false" }
-boolean = @ { k_true | k_false }
+boolean = ${ k_true | k_false }
 
-string = _{ "'" ~ (!"'" ~ any)* ~ "'" }
+string = ${ "'" ~ inner_string ~ "'" }
+inner_string = @{ (!"'" ~ any)* }
 float = @{ "-"? ~ ('0'..'9')+ ~ "." ~ ('0'..'9')* }
 integer = @{ "-"? ~ ('0'..'9')+ }
-number = @{ float | integer }
+number = ${ float | integer }
 constant = @{ ('a'..'z' | 'A'..'Z' | "+" | "-" | "*" | "/") ~ ('a'..'z' | 'A'..'Z' | "+" | "-" | "*" | "/" | '0'..'9')* }
 
 p_start = { (lparen ~ p_def ~ rparen)* }
