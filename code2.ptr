@@ -5,3 +5,5 @@
 (def fls false)
 (def f1 1.)
 (def f2 2.15123)
+(def fun 'function def not implemented yet')
+(def ret (fun 2 x '5' b false))
