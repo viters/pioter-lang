@@ -6,7 +6,7 @@ pub fn or(args: Vec<Constant>) -> Constant {
   match pair {
     (&Constant::Boolean(v1), &Constant::Boolean(v2)) => Constant::Boolean(v1 || v2),
     _ => {
-      eprintln!("Invalid arguments passed to \"and\"!");
+      eprintln!("Invalid arguments passed to \"or\"!");
       panic!()
     }
   }
