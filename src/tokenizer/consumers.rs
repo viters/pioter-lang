@@ -1,7 +1,7 @@
 use std::iter::Peekable;
 use std::str::Chars;
-use tokenizer::Token;
-use tokenizer::Keyword;
+use super::keyword::Keyword;
+use super::Token;
 
 pub fn consume_while<F>(it: &mut Peekable<Chars>, pred: F) -> Vec<char>
   where F: Fn(char) -> bool {
@@ -51,8 +51,9 @@ pub fn consume_number(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>, erro
   }
 }
 
-pub fn consume_keyword(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
-  let chars: String = consume_while(it, |a| a.is_alphanumeric() || a == '_')
+pub fn consume_constant(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
+  let chars: String = consume_while(it, |a| a.is_alphanumeric() || a == '+' ||
+    a == '-' || a == '*' || a == '/')
     .into_iter()
     .collect();
 
@@ -61,7 +62,7 @@ pub fn consume_keyword(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
     "true" => token_vec.push(Token::Keyword(Keyword::True)),
     "false" => token_vec.push(Token::Keyword(Keyword::False)),
     "match" => token_vec.push(Token::Keyword(Keyword::Match)),
-    _ => token_vec.push(Token::Variable(chars))
+    _ => token_vec.push(Token::Constant(chars))
   }
 }
 

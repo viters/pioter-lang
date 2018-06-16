@@ -15,7 +15,7 @@ dependencies = [
 
 [[package]]
 name = "pioter-lang"
-version = "0.2.0"
+version = "0.5.0"
 dependencies = [
  "pest 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "pest_derive 1.0.7 (registry+https://github.com/rust-lang/crates.io-index)",
