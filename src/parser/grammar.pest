@@ -24,12 +24,13 @@ inner_string = @{ (!"'" ~ any)* }
 float = @{ "-"? ~ ('0'..'9')+ ~ "." ~ ('0'..'9')* }
 integer = @{ "-"? ~ ('0'..'9')+ }
 number = ${ float | integer }
-constant = @{ ('a'..'z' | 'A'..'Z' | "+" | "-" | "*" | "/") ~ ('a'..'z' | 'A'..'Z' | "+" | "-" | "*" | "/" | '0'..'9')* }
+constant = @{ ('a'..'z' | 'A'..'Z' ) ~ ('a'..'z' | 'A'..'Z' | '0'..'9')* | ( "+" | "-" | "*" | "/")+}
 
 p_start = { (lparen ~ p_def ~ rparen | lparen ~ p_dump ~ rparen)* }
 p_dump = { dump ~ constant }
 p_def = { def ~ constant ~ p_eip }
-p_eip = { number | string | boolean | constant | p_funcall | p_fundef | lparen ~ p_eip ~ rparen }
+p_eip = { number | string | boolean | constant | p_list | p_funcall | p_fundef | lparen ~ p_eip ~ rparen }
+
 
 p_funcall = { p_sfuncall | p_iifuncall }
 p_sfuncall = { lparen ~ constant ~ p_funcallp ~ rparen }
@@ -39,3 +40,6 @@ p_funcallp = { p_eip ~ p_funcallp | p_eip }
 p_fundef = { lparen ~ p_funparam ~ arrow ~ p_eip ~ rparen }
 p_funparam = { lparen ~ p_funparam2 ~ rparen | lparen ~ rparen | p_funparam2 }
 p_funparam2 = { constant ~ comma ~ p_funparam2 | constant }
+
+p_list = { lsquarebracket ~ p_listc ~ rsquarebracket | lsquarebracket ~ rsquarebracket }
+p_listc = { p_eip ~ (comma ~ p_eip )*  }

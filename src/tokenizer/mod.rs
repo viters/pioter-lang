@@ -27,8 +27,8 @@ pub fn tokenize(contents: &String) -> Result<Vec<Token>, Vec<String>> {
       Some(&ch) => match ch {
         '0'...'9' => consume_number(&mut it, &mut tokens, &mut errors, line),
         '-' => {
-          if it.peek().unwrap() == &'>' {
-            it.next();
+          it.next();
+          if it.peek().unwrap().to_owned() == '>' {
             it.next();
             tokens.push(Token::Symbol(Symbol::Arrow));
           } else {

@@ -12,6 +12,7 @@
 (def div (/ 2.5 5))
 (def boolArt (and true false))
 (def expr (+ 11 (- 5 (* 3 8))))
+(def a [1,2,'xD',4,5,b])
 (dump add)
 (dump concat)
 (dump sub)
@@ -19,3 +20,4 @@
 (dump div)
 (dump boolArt)
 (dump expr)
+(dump a)

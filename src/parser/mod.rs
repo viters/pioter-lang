@@ -1,5 +1,6 @@
 use parser::functions::*;
 use parser::primitives::*;
+use parser::lists::*;
 use pest::iterators::Pair;
 use pest::Parser;
 use std::collections::HashMap;
@@ -7,11 +8,17 @@ use super::stdlib;
 
 mod primitives;
 mod functions;
+mod lists;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Function {
   pub args: Vec<Option<Constant>>,
   pub implementation: fn(Vec<Constant>) -> Constant,
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct List{
+  pub elems: Vec<Constant>,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -21,6 +28,7 @@ pub enum Constant {
   String(String),
   Boolean(bool),
   Function(Function),
+  List(List)
 }
 
 #[derive(Parser)]
@@ -68,6 +76,8 @@ pub fn parse(contents: String) {
 }
 
 pub fn parse_p_eip(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Constant {
+  println!("{:?}",pair.as_rule());
+  println!("{:?}",pair.clone().into_span().as_str());
   match pair.as_rule() {
     Rule::number => parse_number(pair.into_inner().nth(0).unwrap()),
     Rule::string => parse_string(pair),
@@ -76,6 +86,7 @@ pub fn parse_p_eip(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Consta
     Rule::p_funcall => parse_funcall(pair, memory),
     Rule::p_fundef => parse_fundef(pair),
     Rule::p_eip => parse_p_eip(pair.into_inner().nth(0).unwrap(), memory),
+    Rule::p_list => parse_p_list(pair.into_inner().nth(0).unwrap(), memory),
     _ => unreachable!()
   }
 }
