@@ -2,7 +2,6 @@ use pest::iterators::Pair;
 use std::collections::HashMap;
 use super::*;
 use super::Constant;
-use super::primitives;
 use super::Rule;
 
 pub fn parse_p_list(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Constant {

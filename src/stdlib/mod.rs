@@ -11,6 +11,7 @@ mod and;
 mod or;
 mod not;
 mod len;
+mod equal;
 
 pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("+", create_base_fn(add::add));
@@ -22,6 +23,7 @@ pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("or", create_base_fn(or::or));
   memory.insert("not", create_base_fn(not::not));
   memory.insert("len", create_base_fn(len::len));
+  memory.insert("==", create_base_fn(equal::equal));
 }
 
 fn create_base_fn(fun: fn(Vec<Constant>) -> Constant) -> Constant {

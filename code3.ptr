@@ -1,1 +1,3 @@
-(def fun (x ~ (+ x 2)))
+(dump (== 'abc' 'abc'))
+
+# (def fun (x ~ (+ x 2)))
