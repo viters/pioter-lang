@@ -1,6 +1,6 @@
 use parser::functions::*;
-use parser::primitives::*;
 use parser::lists::*;
+use parser::primitives::*;
 use pest::iterators::Pair;
 use pest::Parser;
 use std::collections::HashMap;
@@ -17,18 +17,13 @@ pub struct Function {
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct List{
-  pub elems: Vec<Constant>,
-}
-
-#[derive(Debug, PartialEq, Clone)]
 pub enum Constant {
   Float(f32),
   Integer(i32),
   String(String),
   Boolean(bool),
   Function(Function),
-  List(List)
+  List(Vec<Constant>),
 }
 
 #[derive(Parser)]
@@ -47,7 +42,7 @@ pub fn parse(contents: String) {
         Rule::p_dump => {
           let pair = p_def.into_inner().nth(0).unwrap();
           let name = pair.clone().into_span().as_str();
-          let constant = parse_constant(pair, &memory);
+          let constant = parse_p_eip(pair, &memory);
           println!("{} = {:?}", name, constant)
         }
         Rule::p_def => {
@@ -58,6 +53,11 @@ pub fn parse(contents: String) {
               Rule::def => (),
               Rule::constant => {
                 name = p_def_inner.into_span().as_str();
+
+                if memory.get(name).is_some() {
+                  println!("Constant \"{}\" is already defined!", name);
+                  panic!();
+                }
               }
               Rule::p_eip => {
                 for p_eip_inner in p_def_inner.into_inner() {
@@ -76,8 +76,6 @@ pub fn parse(contents: String) {
 }
 
 pub fn parse_p_eip(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Constant {
-  println!("{:?}",pair.as_rule());
-  println!("{:?}",pair.clone().into_span().as_str());
   match pair.as_rule() {
     Rule::number => parse_number(pair.into_inner().nth(0).unwrap()),
     Rule::string => parse_string(pair),
