@@ -1,3 +1,4 @@
+use parser::debug_pair;
 use pest::iterators::Pair;
 use std::collections::HashMap;
 use super::Constant;
@@ -19,8 +20,12 @@ pub fn parse_funcall(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Cons
   }
 }
 
-pub fn parse_fundef(_pair: Pair<Rule>) -> Constant {
-  Constant::String(String::from("Function"))
+pub fn parse_fundef(pair: Pair<Rule>) -> Constant {
+  for inner in pair.into_inner() {
+    debug_pair(inner);
+  }
+
+  Constant::Integer(42)
 }
 
 fn parse_funcall_args(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Vec<Constant> {

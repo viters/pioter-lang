@@ -76,8 +76,6 @@ pub fn parse(contents: String) {
 }
 
 pub fn parse_p_eip(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Constant {
-  debug_pair(pair.clone());
-
   match pair.as_rule() {
     Rule::number => parse_number(pair.into_inner().nth(0).unwrap()),
     Rule::string => parse_string(pair),
