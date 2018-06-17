@@ -1,6 +1,6 @@
 use super::Constant;
 
-pub fn equal(args: Vec<Constant>) -> Constant {
+pub fn eq(args: Vec<Constant>) -> Constant {
   let pair: (&Constant, &Constant) = (args.get(0).unwrap(), args.get(1).unwrap());
 
   match pair {

@@ -24,7 +24,7 @@ inner_string = @{ (!"'" ~ any)* }
 float = @{ "-"? ~ ('0'..'9')+ ~ "." ~ ('0'..'9')* }
 integer = @{ "-"? ~ ('0'..'9')+ }
 number = ${ float | integer }
-constant = @{ ('a'..'z' | 'A'..'Z' ) ~ ('a'..'z' | 'A'..'Z' | '0'..'9')* | ( "+" | "-" | "*" | "/" | ">" | "<" | "=" )+}
+constant = @{ ('a'..'z' | 'A'..'Z' ) ~ ('a'..'z' | 'A'..'Z' | '0'..'9')* | ( "+" | "-" | "*" | "/" | ">" | "<" | "=" | "|" | "&" | "%" | "!" )+}
 
 p_start = { (lparen ~ p_def ~ rparen | lparen ~ p_dump ~ rparen)* }
 p_dump = { dump ~ p_eip }

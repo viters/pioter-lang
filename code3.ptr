@@ -1,3 +1,7 @@
 (dump (== 'abc' 'abc'))
+(dump (! true))
+(dump (% 6 4))
+(dump (>= 6 4))
+(dump (>= 'b' 'a'))
 
 # (def fun (x ~ (+ x 2)))

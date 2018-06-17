@@ -26,7 +26,7 @@ pub fn tokenize(contents: &String) -> Result<Vec<Token>, Vec<String>> {
     match it.peek() {
       Some(&ch) => match ch {
         '0'...'9' => consume_number(&mut it, &mut tokens, &mut errors, line),
-        '-' | '*' | '+' | '/' | '<' | '>' | '=' => consume_operator(&mut it, &mut tokens),
+        '-' | '*' | '+' | '/' | '<' | '>' | '=' | '!' | '&' | '|' | '%' => consume_operator(&mut it, &mut tokens),
         '~' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::Arrow)),
         '(' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::LParen)),
         ')' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::RParen)),

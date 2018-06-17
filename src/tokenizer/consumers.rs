@@ -67,7 +67,7 @@ pub fn consume_constant(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
 
 pub fn consume_operator(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
   let chars: String = consume_while(it, |a| a == '-' || a == '+' || a == '*' || a == '/'
-    || a == '>' || a == '<' || a == '=')
+    || a == '>' || a == '<' || a == '=' || a == '&' || a == '|' || a == '!' || a == '%')
     .into_iter()
     .collect();
 
