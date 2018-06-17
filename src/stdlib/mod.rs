@@ -9,6 +9,7 @@ mod divide;
 mod modulo;
 mod and;
 mod or;
+mod not;
 mod len;
 
 pub fn register(memory: &mut HashMap<&str, Constant>) {
@@ -19,6 +20,7 @@ pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("mod", create_base_fn(modulo::modulo));
   memory.insert("and", create_base_fn(and::and));
   memory.insert("or", create_base_fn(or::or));
+  memory.insert("not", create_base_fn(not::not));
   memory.insert("len", create_base_fn(len::len));
 }
 
