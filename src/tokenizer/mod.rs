@@ -26,15 +26,7 @@ pub fn tokenize(contents: &String) -> Result<Vec<Token>, Vec<String>> {
     match it.peek() {
       Some(&ch) => match ch {
         '0'...'9' => consume_number(&mut it, &mut tokens, &mut errors, line),
-        '-' => {
-          it.next();
-          if it.peek().unwrap().to_owned() == '>' {
-            it.next();
-            tokens.push(Token::Symbol(Symbol::Arrow));
-          } else {
-            consume_constant(&mut it, &mut tokens);
-          }
-        }
+        '-' | '*' | '+' | '/' => consume_operator(&mut it, &mut tokens),
         '(' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::LParen)),
         ')' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::RParen)),
         '[' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::LSquareBracket)),
@@ -50,7 +42,7 @@ pub fn tokenize(contents: &String) -> Result<Vec<Token>, Vec<String>> {
           line = line + 1;
         }
         '\'' => consume_string(&mut it, &mut tokens),
-        'A'...'Z' | 'a'...'z' | '+' | '*' | '/' => consume_constant(&mut it, &mut tokens),
+        'A'...'Z' | 'a'...'z' => consume_constant(&mut it, &mut tokens),
         '_' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::Underscore)),
         ':' => consume_token(&mut it, &mut tokens, Token::Symbol(Symbol::Colon)),
         _ => {

@@ -2,6 +2,7 @@ use std::iter::Peekable;
 use std::str::Chars;
 use super::keyword::Keyword;
 use super::Token;
+use tokenizer::symbol::Symbol;
 
 pub fn consume_while<F>(it: &mut Peekable<Chars>, pred: F) -> Vec<char>
   where F: Fn(char) -> bool {
@@ -52,8 +53,7 @@ pub fn consume_number(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>, erro
 }
 
 pub fn consume_constant(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
-  let chars: String = consume_while(it, |a| a.is_alphanumeric() || a == '+' ||
-    a == '-' || a == '*' || a == '/')
+  let chars: String = consume_while(it, |a| a.is_alphanumeric())
     .into_iter()
     .collect();
 
@@ -62,6 +62,17 @@ pub fn consume_constant(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
     "true" => token_vec.push(Token::Keyword(Keyword::True)),
     "false" => token_vec.push(Token::Keyword(Keyword::False)),
     "match" => token_vec.push(Token::Keyword(Keyword::Match)),
+    _ => token_vec.push(Token::Constant(chars))
+  }
+}
+
+pub fn consume_operator(it: &mut Peekable<Chars>, token_vec: &mut Vec<Token>) {
+  let chars: String = consume_while(it, |a| a == '-' || a == '+' || a == '*' || a == '/')
+    .into_iter()
+    .collect();
+
+  match chars.as_ref() {
+    "->" => token_vec.push(Token::Symbol(Symbol::Arrow)),
     _ => token_vec.push(Token::Constant(chars))
   }
 }
