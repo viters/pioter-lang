@@ -16,6 +16,7 @@ mod le;
 mod eq;
 mod ge;
 mod gt;
+mod nth;
 
 pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("+", create_base_fn(add::add));
@@ -32,6 +33,7 @@ pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert(">=", create_base_fn(ge::ge));
   memory.insert("<", create_base_fn(lt::lt));
   memory.insert("<=", create_base_fn(le::le));
+  memory.insert("nth", create_base_fn(nth::nth));
 }
 
 fn create_base_fn(fun: fn(Vec<Constant>) -> Constant) -> Constant {

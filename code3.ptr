@@ -3,5 +3,9 @@
 (dump (% 6 4))
 (dump (>= 6 4))
 (dump (>= 'b' 'a'))
+(def x (+ -5 -4))
+(dump x)
+(def list [(+ 5 5), 2, (! (== 5. 5.))])
+(dump (nth 0 list))
 
 # (def fun (x ~ (+ x 2)))
