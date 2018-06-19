@@ -1,2 +1,5 @@
 (def ++ (+ 1))
-(dump (++ 5))
+(def list [1,2,3])
+(def arr (map ++ list))
+(dump arr)
+(dump (filter (< 2) arr))

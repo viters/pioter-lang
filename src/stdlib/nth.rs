@@ -16,7 +16,7 @@ pub fn nth(args: Vec<Constant>) -> Constant {
       }
     }
     _ => {
-      eprintln!("Invalid arguments passed to \"mod\"!");
+      eprintln!("Invalid arguments passed to \"nth\"!");
       panic!()
     }
   }

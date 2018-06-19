@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use super::parser::Constant;
 use super::parser::Function;
+use super::parser::functions::run_fn;
 
 mod add;
 mod subtract;
@@ -17,6 +18,8 @@ mod eq;
 mod ge;
 mod gt;
 mod nth;
+mod map;
+mod filter;
 
 pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("+", create_stdlib_fn(add::add, 2));
@@ -34,6 +37,8 @@ pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("<", create_stdlib_fn(lt::lt, 2));
   memory.insert("<=", create_stdlib_fn(le::le, 2));
   memory.insert("nth", create_stdlib_fn(nth::nth, 2));
+  memory.insert("map", create_stdlib_fn(map::map, 2));
+  memory.insert("filter", create_stdlib_fn(filter::filter, 2));
 }
 
 fn create_stdlib_fn(fun: fn(Vec<Constant>) -> Constant, argc: usize) -> Constant {

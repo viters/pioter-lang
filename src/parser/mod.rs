@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use super::stdlib;
 
 mod primitives;
-mod functions;
+pub mod functions;
 mod lists;
 
 #[derive(Debug, PartialEq, Clone)]

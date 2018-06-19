@@ -92,7 +92,7 @@ fn parse_p_eip_fn(pair: Pair<Rule>, memory: &HashMap<&str, Constant>, local: &Ve
   }
 }
 
-fn run_fn(constant: Constant, args: Vec<Constant>) -> Constant {
+pub fn run_fn(constant: Constant, args: Vec<Constant>) -> Constant {
   match constant {
     Constant::Function(fun) => {
       let argc = args.len();
