@@ -19,26 +19,27 @@ mod gt;
 mod nth;
 
 pub fn register(memory: &mut HashMap<&str, Constant>) {
-  memory.insert("+", create_base_fn(add::add));
-  memory.insert("-", create_base_fn(subtract::subtract));
-  memory.insert("*", create_base_fn(multiply::multiply));
-  memory.insert("/", create_base_fn(divide::divide));
-  memory.insert("%", create_base_fn(modulo::modulo));
-  memory.insert("&&", create_base_fn(and::and));
-  memory.insert("||", create_base_fn(or::or));
-  memory.insert("!", create_base_fn(not::not));
-  memory.insert("len", create_base_fn(len::len));
-  memory.insert("==", create_base_fn(eq::eq));
-  memory.insert(">", create_base_fn(gt::gt));
-  memory.insert(">=", create_base_fn(ge::ge));
-  memory.insert("<", create_base_fn(lt::lt));
-  memory.insert("<=", create_base_fn(le::le));
-  memory.insert("nth", create_base_fn(nth::nth));
+  memory.insert("+", create_stdlib_fn(add::add));
+  memory.insert("-", create_stdlib_fn(subtract::subtract));
+  memory.insert("*", create_stdlib_fn(multiply::multiply));
+  memory.insert("/", create_stdlib_fn(divide::divide));
+  memory.insert("%", create_stdlib_fn(modulo::modulo));
+  memory.insert("&&", create_stdlib_fn(and::and));
+  memory.insert("||", create_stdlib_fn(or::or));
+  memory.insert("!", create_stdlib_fn(not::not));
+  memory.insert("len", create_stdlib_fn(len::len));
+  memory.insert("==", create_stdlib_fn(eq::eq));
+  memory.insert(">", create_stdlib_fn(gt::gt));
+  memory.insert(">=", create_stdlib_fn(ge::ge));
+  memory.insert("<", create_stdlib_fn(lt::lt));
+  memory.insert("<=", create_stdlib_fn(le::le));
+  memory.insert("nth", create_stdlib_fn(nth::nth));
 }
 
-fn create_base_fn(fun: fn(Vec<Constant>) -> Constant) -> Constant {
+fn create_stdlib_fn(fun: fn(Vec<Constant>) -> Constant) -> Constant {
   Constant::Function(Function {
     args: vec![],
-    implementation: fun,
+    base_fn: None,
+    implementation: Some(fun),
   })
 }

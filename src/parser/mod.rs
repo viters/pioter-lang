@@ -12,8 +12,9 @@ mod lists;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Function {
-  pub args: Vec<Option<Constant>>,
-  pub implementation: fn(Vec<Constant>) -> Constant,
+  pub args: Vec<Constant>,
+  pub base_fn: Option<Box<Constant>>,
+  pub implementation: Option<fn(Vec<Constant>) -> Constant>,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -24,6 +25,7 @@ pub enum Constant {
   Boolean(bool),
   Function(Function),
   List(Vec<Constant>),
+  Index(usize)
 }
 
 #[derive(Parser)]
@@ -81,8 +83,8 @@ pub fn parse_p_eip(pair: Pair<Rule>, memory: &HashMap<&str, Constant>) -> Consta
     Rule::string => parse_string(pair),
     Rule::boolean => parse_boolean(pair.into_inner().nth(0).unwrap()),
     Rule::constant => parse_constant(pair, memory),
-    Rule::p_funcall => parse_funcall(pair, memory),
-    Rule::p_fundef => parse_fundef(pair),
+    Rule::p_funcall => parse_funcall(pair, memory, None),
+    Rule::p_fundef => parse_fundef(pair, memory),
     Rule::p_eip => parse_p_eip(pair.into_inner().nth(0).unwrap(), memory),
     Rule::p_list => parse_p_list(pair.into_inner().nth(0).unwrap(), memory),
     _ => unreachable!()

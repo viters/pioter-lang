@@ -33,7 +33,7 @@ p_eip = { number | string | boolean | constant | p_list | p_funcall | p_fundef |
 
 p_fundef = { lparen ~ p_funparam ~ arrow ~ p_eip ~ rparen }
 p_funparam = { lparen ~ p_funparam2 ~ rparen | lparen ~ rparen | p_funparam2 }
-p_funparam2 = { constant ~ comma ~ p_funparam2 | constant }
+p_funparam2 = { constant ~ (comma ~ constant)* }
 
 p_funcall = { p_sfuncall | p_iifuncall }
 p_sfuncall = { lparen ~ constant ~ p_funcallp ~ rparen }
