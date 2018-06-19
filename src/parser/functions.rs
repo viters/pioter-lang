@@ -5,7 +5,6 @@ use parser::primitives::parse_constant;
 use pest::iterators::Pair;
 use std::collections::HashMap;
 use super::Constant;
-use super::primitives;
 use super::Rule;
 
 pub fn parse_funcall(pair: Pair<Rule>, memory: &HashMap<&str, Constant>, local: Option<&Vec<&str>>) -> Constant {
@@ -13,7 +12,7 @@ pub fn parse_funcall(pair: Pair<Rule>, memory: &HashMap<&str, Constant>, local: 
 
   match inner.as_rule() {
     Rule::p_sfuncall => {
-      let fun = primitives::parse_constant(inner.clone().into_inner().nth(0).unwrap(), memory);
+      let fun = parse_constant(inner.clone().into_inner().nth(0).unwrap(), memory);
       let args = parse_funcall_args(inner.clone().into_inner().nth(1).unwrap(), memory, local);
 
       match local {
@@ -65,7 +64,7 @@ fn parse_funcall_args(pair: Pair<Rule>, memory: &HashMap<&str, Constant>, local:
   let mut args;
   match local {
     Some(t) => args = vec![parse_p_eip_fn(inner.clone().nth(0).unwrap(), memory, t)],
-    None => args = vec![super::parse_p_eip(inner.clone().nth(0).unwrap(), memory)]
+    None => args = vec![parse_p_eip(inner.clone().nth(0).unwrap(), memory)]
   }
 
   if inner.clone().count() > 1 {
@@ -98,8 +97,8 @@ pub fn run_fn(constant: Constant, args: Vec<Constant>) -> Constant {
       let argc = args.len();
       let diff = fun.argc - argc;
 
-
-      let new_args = fun.args.into_iter().map(|a| match a {
+      let new_args: Vec<Constant> = fun.args.into_iter().map(|a| match a {
+        Constant::Function(f) => run_fn(Constant::Function(f), args.clone()),
         Constant::Index(i) => {
           let v = args.get(i);
 

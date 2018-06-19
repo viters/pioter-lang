@@ -1,5 +1,7 @@
 (def ++ (+ 1))
-(def list [1,2,3])
-(def arr (map ++ list))
-(dump arr)
-(dump (filter (< 2) arr))
+(def list [5, 6, 7, 8])
+(def incList (map ++ list))
+(dump (filter (< 7) incList))
+
+(def mean (x, y ~ (/ (+ x y) 2)))
+(dump (mean 15 2))
