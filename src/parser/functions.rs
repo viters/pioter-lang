@@ -17,8 +17,9 @@ pub fn parse_funcall(pair: Pair<Rule>, memory: &HashMap<&str, Constant>, local: 
       let args = parse_funcall_args(inner.clone().into_inner().nth(1).unwrap(), memory, local);
 
       match local {
-        Some(_) => Constant::Function(Function {
+        Some(t) => Constant::Function(Function {
           args,
+          argc: t.len(),
           base_fn: Some(Box::new(fun)),
           implementation: None,
         }),
@@ -94,16 +95,39 @@ fn parse_p_eip_fn(pair: Pair<Rule>, memory: &HashMap<&str, Constant>, local: &Ve
 fn run_fn(constant: Constant, args: Vec<Constant>) -> Constant {
   match constant {
     Constant::Function(fun) => {
-      match fun.base_fn {
-        Some(t) => {
-          let new_args = fun.args.into_iter().map(|a| match a {
-            Constant::Index(i) => args.get(i).unwrap().clone(),
-            _ => a
-          }).collect();
+      let argc = args.len();
+      let diff = fun.argc - argc;
 
-          run_fn(unbox(t), new_args)
+
+      let new_args = fun.args.into_iter().map(|a| match a {
+        Constant::Index(i) => {
+          let v = args.get(i);
+
+          match v {
+            Some(t) => t.clone(),
+            None => Constant::Index(i - argc)
+          }
         },
-        None => (fun.implementation.unwrap())(args)
+        _ => a
+      }).collect();
+
+      if diff == 0 {
+        match fun.base_fn {
+          Some(t) => {
+            run_fn(unbox(t), new_args)
+          },
+          None => (fun.implementation.unwrap())(new_args)
+        }
+      } else if diff > 0 {
+        Constant::Function(Function {
+          args: new_args,
+          argc: diff,
+          base_fn: fun.base_fn,
+          implementation: fun.implementation,
+        })
+      } else {
+        eprintln!("Too many arguments passed.");
+        panic!()
       }
     },
     _ => {

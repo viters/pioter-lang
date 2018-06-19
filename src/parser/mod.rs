@@ -15,6 +15,7 @@ pub struct Function {
   pub args: Vec<Constant>,
   pub base_fn: Option<Box<Constant>>,
   pub implementation: Option<fn(Vec<Constant>) -> Constant>,
+  pub argc: usize
 }
 
 #[derive(Debug, PartialEq, Clone)]

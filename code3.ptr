@@ -1,2 +1,2 @@
-(def sq (x ~ (* x x)))
-(dump (sq 5))
+(def ++ (+ 1))
+(dump (++ 5))
