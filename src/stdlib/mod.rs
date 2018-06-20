@@ -20,6 +20,7 @@ mod gt;
 mod nth;
 mod map;
 mod filter;
+mod fold;
 
 pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("+", create_stdlib_fn(add::add, 2));
@@ -39,6 +40,7 @@ pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("nth", create_stdlib_fn(nth::nth, 2));
   memory.insert("map", create_stdlib_fn(map::map, 2));
   memory.insert("filter", create_stdlib_fn(filter::filter, 2));
+  memory.insert("fold", create_stdlib_fn(fold::fold, 3));
 }
 
 fn create_stdlib_fn(fun: fn(Vec<Constant>) -> Constant, argc: usize) -> Constant {

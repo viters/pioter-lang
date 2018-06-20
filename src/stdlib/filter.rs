@@ -25,7 +25,7 @@ pub fn filter(args: Vec<Constant>) -> Constant {
       Constant::List(filtered_vec)
     }
     _ => {
-      eprintln!("Invalid arguments passed to \"map\"!");
+      eprintln!("Invalid arguments passed to \"filter\"!");
       panic!()
     }
   }
