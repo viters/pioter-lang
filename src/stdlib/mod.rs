@@ -15,6 +15,7 @@ mod len;
 mod lt;
 mod le;
 mod eq;
+mod ne;
 mod ge;
 mod gt;
 mod nth;
@@ -33,6 +34,7 @@ pub fn register(memory: &mut HashMap<&str, Constant>) {
   memory.insert("!", create_stdlib_fn(not::not, 1));
   memory.insert("len", create_stdlib_fn(len::len, 1));
   memory.insert("==", create_stdlib_fn(eq::eq, 2));
+  memory.insert("!=", create_stdlib_fn(ne::ne, 2));
   memory.insert(">", create_stdlib_fn(gt::gt, 2));
   memory.insert(">=", create_stdlib_fn(ge::ge, 2));
   memory.insert("<", create_stdlib_fn(lt::lt, 2));
